@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
-import { db } from '../../firebase';
+import React, { useEffect, useState } from 'react';
+import { db } from '../types/firebase';
 import { collection, getDocs, QuerySnapshot } from 'firebase/firestore';
 
 interface FormSubmission {
   id: string;
-  formData: {
+
     nombres: string;
     apellido: string;
     cargo: string;
@@ -17,13 +17,38 @@ interface FormSubmission {
     totalHoras: string;
     motivo: string;
     justificacion: string;
-  };
+
   status: string;
   timestamp: {
     seconds: number;
     nanoseconds: number;
   };
 }
+
+const Modal: React.FC<{ request: FormSubmission; onClose: () => void }> = ({ request, onClose }) => (
+  <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+    <div className="bg-white p-8 rounded shadow-md w-96">
+      <h2 className="text-2xl font-bold mb-4">Detalles de la Solicitud</h2>
+      <p><strong>Nombres:</strong> {request.nombres}</p>
+      <p><strong>Apellidos:</strong> {request.apellido}</p>
+      <p><strong>Cargo:</strong> {request.cargo}</p>
+      <p><strong>Identificación:</strong> {request.identificacion}</p>
+      <p><strong>Desde:</strong> {request.desdeReunion}</p>
+      <p><strong>Hasta:</strong> {request.hastaReunion}</p>
+      <p><strong>Total Días:</strong> {request.totalDias}</p>
+      <p><strong>A partir de:</strong> {request.aPartirDe}</p>
+      <p><strong>Hasta las:</strong> {request.hastaLas}</p>
+      <p><strong>Total Horas:</strong> {request.totalHoras}</p>
+      <p><strong>Motivo:</strong> {request.motivo}</p>
+      <p><strong>Justificación:</strong> {request.justificacion}</p>
+      <p><strong>Status:</strong> {request.status}</p>
+      <p><strong>Timestamp:</strong> {new Date(request.timestamp.seconds * 1000).toLocaleString()}</p>
+      <button onClick={onClose} className="bg-red-500 text-white px-4 py-2 rounded mt-4">
+        Cerrar
+      </button>
+    </div>
+  </div>
+);
 
 const ViewRequests: React.FC = () => {
   const [requests, setRequests] = useState<FormSubmission[]>([]);
@@ -63,8 +88,8 @@ const ViewRequests: React.FC = () => {
       <ul>
         {requests.map(request => (
           <li key={request.id} className="mb-4 p-4 bg-white rounded shadow-md">
-            <p>{request.formData?.nombres} {request.formData?.apellido}</p>
-            <p>Motivo: {request.formData?.motivo}</p>
+            <p>{request?.nombres} {request?.apellido}</p>
+            <p>Motivo: {request?.motivo}</p>
             <p>Status: {request.status}</p>
             <p>Timestamp: {new Date(request.timestamp?.seconds * 1000).toLocaleString()}</p>
             <button
@@ -78,29 +103,7 @@ const ViewRequests: React.FC = () => {
       </ul>
 
       {isModalOpen && selectedRequest && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-8 rounded shadow-md w-96">
-            <h2 className="text-2xl font-bold mb-4">Detalles de la Solicitud</h2>
-            <p><strong>Nombres:</strong> {selectedRequest.nombres}</p>
-            <p><strong>Apellidos:</strong> {selectedRequest.apellido}</p>
-            <p><strong>Cargo:</strong> {selectedRequest.cargo}</p>
-            <p><strong>Identificación:</strong> {selectedRequest.identificacion}</p>
-            <p><strong>Desde:</strong> {selectedRequest.desdeReunion}</p>
-            <p><strong>Hasta:</strong> {selectedRequest.hastaReunion}</p>
-            <p><strong>Total Días:</strong> {selectedRequest.totalDias}</p>
-            <p><strong>A partir de:</strong> {selectedRequest.aPartirDe}</p>
-            <p><strong>Hasta las:</strong> {selectedRequest.hastaLas}</p>
-            <p><strong>Total Horas:</strong> {selectedRequest.totalHoras}</p>
-            <p><strong>Motivo:</strong> {selectedRequest.motivo}</p>
-            <p><strong>Justificación:</strong> {selectedRequest.justificacion}</p>
-            <p><strong>Status:</strong> {selectedRequest.status}</p>
-            <p><strong>Timestamp:</strong> {new Date(selectedRequest.timestamp.seconds * 1000).toLocaleString()}</p>
-            <p><strong>Timestamp:</strong> {new Date(selectedRequest.timestamp.seconds * 1000).toLocaleString()}</p>
-            <button onClick={closeModal} className="bg-red-500 text-white px-4 py-2 rounded mt-4">
-              Cerrar
-            </button>
-          </div>
-        </div>
+        <Modal request={selectedRequest} onClose={closeModal} />
       )}
     </div>
   );

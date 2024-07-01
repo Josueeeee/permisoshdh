@@ -1,9 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
+import App from './App.tsx';
+
 import './index.css'
 import {BrowserRouter } from 'react-router-dom'
-import "../firebase.js"
+import "./types/firebase.js"
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <BrowserRouter>

@@ -1,7 +1,29 @@
-import { useEffect, useState } from 'react';
-import { db } from '../../firebase';
-import { collection, getDocs, doc, updateDoc } from 'firebase/firestore';
-import { FormSubmission } from '../types';
+import React, { useEffect, useState } from 'react';
+import { db } from '../types/firebase';
+import { collection, getDocs, updateDoc, doc } from 'firebase/firestore';
+
+interface FormSubmission {
+  id: string;
+ 
+    nombres: string;
+    apellido: string;
+    cargo: string;
+    identificacion: string;
+    desdeReunion: string;
+    hastaReunion: string;
+    totalDias: string;
+    aPartirDe: string;
+    hastaLas: string;
+    totalHoras: string;
+    motivo: string;
+    justificacion: string;
+
+  status: string;
+  timestamp: {
+    seconds: number;
+    nanoseconds: number;
+  };
+}
 
 const ApproveRequests: React.FC = () => {
   const [requests, setRequests] = useState<FormSubmission[]>([]);
@@ -29,7 +51,6 @@ const ApproveRequests: React.FC = () => {
       const requestRef = doc(db, 'formSubmissions', requestId);
       await updateDoc(requestRef, { status });
 
-      // Actualizar la lista de solicitudes localmente después de la actualización exitosa
       setRequests(prevRequests =>
         prevRequests.map(request =>
           request.id === requestId ? { ...request, status } : request
@@ -54,8 +75,8 @@ const ApproveRequests: React.FC = () => {
       <ul>
         {requests.map(request => (
           <li key={request.id} className="mb-4 p-4 bg-white rounded shadow-md">
-            <p>{request.formData?.nombres} {request.formData?.apellido}</p>
-            <p>Motivo: {request.formData?.motivo}</p>
+            <p>{request?.nombres} {request?.apellido}</p>
+            <p>Motivo: {request?.motivo}</p>
             <p>Status: {request.status}</p>
             <button
               onClick={() => handleUpdateStatus(request.id, 'approved')}
@@ -79,7 +100,6 @@ const ApproveRequests: React.FC = () => {
         ))}
       </ul>
 
-      {/* Modal o sección para mostrar detalles de la solicitud */}
       {selectedRequest && (
         <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-75 flex items-center justify-center">
           <div className="bg-white p-8 rounded shadow-md">
