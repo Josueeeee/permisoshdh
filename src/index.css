@@ -2,10 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 /* styles.css o en el componente */
+#root {
+  background: #f3fcfb;
+}
 .modal {
   display: block;
   position: fixed;
-  z-index: 1;
+  z-index: 1;   
   left: 0;
   top: 0;
   width: 100%;

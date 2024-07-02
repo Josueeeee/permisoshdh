@@ -28,7 +28,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen bg-[#F3F6FC]">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded shadow-md">
         {error && <p className="text-red-500">{error}</p>}
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -40,7 +40,7 @@ const Login: React.FC = () => {
               id="email"
               placeholder="email@company.com"
               onChange={handleChange}
-              className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-green-400 focus:border-green-500 sm:text-sm"
             />
           </div>
           <div>
@@ -50,11 +50,11 @@ const Login: React.FC = () => {
               name="password"
               id="password"
               onChange={handleChange}
-              className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-green-400 focus:border-green-500 sm:text-sm"
             />
           </div>
           <div>
-            <button type="submit" className="w-full px-4 py-2 font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+            <button type="submit" className="w-full px-4 py-2 font-medium text-white bg-green-700 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:border-green-400 focus:ring-offset-2">
               Login
             </button>
           </div>

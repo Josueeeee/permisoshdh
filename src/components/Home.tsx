@@ -95,7 +95,7 @@ const Home: React.FC = () => {
     <div className="container mx-auto p-4">
       <p className="text-2xl font-bold mb-4">Bienvenido <span>{user?.email}</span></p>
       <button onClick={handleLogOut} className="bg-red-500 text-white px-4 py-2 rounded mb-4">
-        Salir
+        Salir 
       </button>
 
       {user && user.email === 'admin@gmail.com' ? (
@@ -108,46 +108,46 @@ const Home: React.FC = () => {
         <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md">
           <div className="mb-6">
             <h3 className="text-xl font-bold mb-2">DATOS DE DIRECTIVO SOLICITANTE</h3>
-            <label className="block mb-2">
+            <label className="block mb-2 text-left text-lg font-medium">
               Nombres y Apellido(s):
               <input
                 type="text"
                 name="nombres"
                 value={formData.nombres}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border rounded"
+                className="w-full px-3 py-2 border rounded border-gray-300  "
               />
             </label>
-            <label className="block mb-2">
+            <label className="block mb-2 text-left text-lg font-medium">
               Cargo:
               <input
                 type="text"
                 name="cargo"
                 value={formData.cargo}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border rounded"
+                className="w-full px-3 py-2 border rounded border-gray-300  "
               />
             </label>
-            <label className="block mb-2">
+            <label className="block mb-2 text-left text-lg font-medium">
               Nº Identificación:
               <input
                 type="text"
                 name="identificacion"
                 value={formData.identificacion}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border rounded"
+                className="w-full px-3 py-2 border rounded border-gray-300  "
               />
             </label>
           </div>
 
           <div className="mb-6">
             <h3 className="text-xl font-bold mb-2">DATOS DEL PERMISO SOLICITADO</h3>
-            <label className="block mb-2">
+            <label className="block mb-2 text-left text-lg font-medium">
               Tipo de Permiso:
               <select
                 value={permissionType}
                 onChange={handlePermissionTypeChange}
-                className="w-full px-3 py-2 border rounded"
+                className="w-full px-3 py-2 border rounded border-gray-300  "
               >
                 <option value="reunion">Permiso por Reunión</option>
                 <option value="hora">Permiso por Hora</option>
@@ -156,35 +156,35 @@ const Home: React.FC = () => {
 
             {permissionType === 'reunion' && (
               <div className="mb-4">
-                <h4 className="text-lg font-semibold mb-2">PERMISO POR REUNIÓN</h4>
-                <label className="block mb-2">
+                <h4 className="text-lg font-medium font-semibold mb-2">PERMISO POR REUNIÓN</h4>
+                <label className="block mb-2 text-left text-lg font-medium">
                   Desde:
                   <input
                     type="date"
                     name="desdeReunion"
                     value={formData.desdeReunion}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border rounded"
+                    className="w-full px-3 py-2 border rounded border-gray-300  "
                   />
                 </label>
-                <label className="block mb-2">
+                <label className="block mb-2 text-left text-lg font-medium">
                   Hasta:
                   <input
                     type="date"
                     name="hastaReunion"
                     value={formData.hastaReunion}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border rounded"
+                    className="w-full px-3 py-2 border rounded border-gray-300  "
                   />
                 </label>
-                <label className="block mb-2">
+                <label className="block mb-2 text-left text-lg font-medium">
                   Total Días:
                   <input
                     type="number"
                     name="totalDias"
                     value={formData.totalDias}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border rounded"
+                    className="w-full px-3 py-2 border rounded border-gray-300  "
                   />
                 </label>
               </div>
@@ -192,61 +192,61 @@ const Home: React.FC = () => {
 
             {permissionType === 'hora' && (
               <div className="mb-4">
-                <h4 className="text-lg font-semibold mb-2">PERMISO POR HORA</h4>
-                <label className="block mb-2">
+                <h4 className="text-lg font-medium font-semibold mb-2">PERMISO POR HORA</h4>
+                <label className="block mb-2 text-left text-lg font-medium">
                   A partir de:
                   <input
                     type="time"
                     name="aPartirDe"
                     value={formData.aPartirDe}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border rounded"
+                    className="w-full px-3 py-2 border rounded border-gray-300  "
                   />
                 </label>
-                <label className="block mb-2">
+                <label className="block mb-2 text-left text-lg font-medium">
                   Hasta las:
                   <input
                     type="time"
                     name="hastaLas"
                     value={formData.hastaLas}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border rounded"
+                    className="w-full px-3 py-2 border rounded border-gray-300  "
                   />
                 </label>
-                <label className="block mb-2">
+                <label className="block mb-2 text-left text-lg font-medium">
                   Total Horas:
                   <input
                     type="number"
                     name="totalHoras"
                     value={formData.totalHoras}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border rounded"
+                    className="w-full px-3 py-2 border rounded border-gray-300  "
                   />
                 </label>
               </div>
             )}
 
-            <label className="block mb-2">
+            <label className="block mb-2 text-left text-lg font-medium">
               Motivo del Permiso:
               <textarea
                 name="motivo"
                 value={formData.motivo}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border rounded"
+                className="w-full px-3 py-2 border rounded border-gray-300  "
               />
             </label>
-            <label className="block mb-2">
+            <label className="block mb-2 text-left text-lg font-medium">
               Documento de Cita Médica u Otros:
               <input
                 type="file"
                 name="justificacion"
                 onChange={handleChange}
-                className="w-full px-3 py-2 border rounded"
+                className="w-full px-3 py-2 border rounded border-gray-300  "
               />
             </label>
           </div>
 
-          <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
+          <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded">
             Submit
           </button>
           {successMessage && <p className="text-white mb-4 bg-green-400 p-2 mt-2">{successMessage}</p>}

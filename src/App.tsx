@@ -12,7 +12,7 @@ function App() {
 
   
   return (  
-    <div>
+    <div className=' bg-[#F3F6FC]'>
     <AuthProvider>
     <Routes>
         <Route path="/"  element={
