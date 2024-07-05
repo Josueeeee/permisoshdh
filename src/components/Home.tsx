@@ -1,10 +1,12 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { useAuth } from '../context/authContext';
 
-import { db } from '../types/firebase';
+import { db, storage } from '../types/firebase';
 import { collection, addDoc, Timestamp } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import ApproveRequests from './ApproveRequests';
 import ViewRequests from './ViewRequests';
+import Print from './Print';
 
 interface FormData {
   nombres: string;
@@ -23,7 +25,6 @@ interface FormData {
 
 const Home: React.FC = () => {
   const { user, logout, loading } = useAuth();
- 
 
   const [formData, setFormData] = useState<FormData>({
     nombres: '',
@@ -40,12 +41,18 @@ const Home: React.FC = () => {
     justificacion: '',
   });
 
+  const [justificacionFile, setJustificacionFile] = useState<File | null>(null);
   const [permissionType, setPermissionType] = useState<string>('reunion');
   const [successMessage, setSuccessMessage] = useState<string>('');
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+
+    if (e.target instanceof HTMLInputElement && e.target.type === 'file' && e.target.files) {
+      setJustificacionFile(e.target.files[0]);
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handlePermissionTypeChange = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -55,8 +62,16 @@ const Home: React.FC = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
+      let justificacionURL = '';
+      if (justificacionFile) {
+        const storageRef = ref(storage, `justificaciones/${justificacionFile.name}`);
+        await uploadBytes(storageRef, justificacionFile);
+        justificacionURL = await getDownloadURL(storageRef);
+      }
+
       const docRef = await addDoc(collection(db, 'formSubmissions'), {
         ...formData,
+        justificacion: justificacionURL,
         permissionType,
         userId: user?.uid,
         email: user?.email,
@@ -80,6 +95,7 @@ const Home: React.FC = () => {
         motivo: '',
         justificacion: '',
       });
+      setJustificacionFile(null);
     } catch (error) {
       console.error('Error adding document: ', error);
     }
@@ -98,7 +114,11 @@ const Home: React.FC = () => {
         Salir 
       </button>
 
-      {user && user.email === 'admin@gmail.com' ? (
+      {user && user.email === 'secretaria@gmail.com' ? (
+        <>
+          <Print />
+        </>
+      ) : user && user.email === 'admin@gmail.com' ? (
         <>
           <h2 className="text-xl font-bold mb-4">Gestión de Solicitudes:</h2>
           <ApproveRequests />
@@ -115,7 +135,7 @@ const Home: React.FC = () => {
                 name="nombres"
                 value={formData.nombres}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border rounded border-gray-300  "
+                className="w-full px-3 py-2 border rounded border-gray-300"
               />
             </label>
             <label className="block mb-2 text-left text-lg font-medium">
@@ -125,7 +145,7 @@ const Home: React.FC = () => {
                 name="cargo"
                 value={formData.cargo}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border rounded border-gray-300  "
+                className="w-full px-3 py-2 border rounded border-gray-300"
               />
             </label>
             <label className="block mb-2 text-left text-lg font-medium">
@@ -135,7 +155,7 @@ const Home: React.FC = () => {
                 name="identificacion"
                 value={formData.identificacion}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border rounded border-gray-300  "
+                className="w-full px-3 py-2 border rounded border-gray-300"
               />
             </label>
           </div>
@@ -147,7 +167,7 @@ const Home: React.FC = () => {
               <select
                 value={permissionType}
                 onChange={handlePermissionTypeChange}
-                className="w-full px-3 py-2 border rounded border-gray-300  "
+                className="w-full px-3 py-2 border rounded border-gray-300"
               >
                 <option value="reunion">Permiso por Reunión</option>
                 <option value="hora">Permiso por Hora</option>
@@ -156,7 +176,7 @@ const Home: React.FC = () => {
 
             {permissionType === 'reunion' && (
               <div className="mb-4">
-                <h4 className="text-lg font-medium font-semibold mb-2">PERMISO POR REUNIÓN</h4>
+                <h4 className="text-lg font-medium mb-2">PERMISO POR REUNIÓN</h4>
                 <label className="block mb-2 text-left text-lg font-medium">
                   Desde:
                   <input
@@ -164,7 +184,7 @@ const Home: React.FC = () => {
                     name="desdeReunion"
                     value={formData.desdeReunion}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border rounded border-gray-300  "
+                    className="w-full px-3 py-2 border rounded border-gray-300"
                   />
                 </label>
                 <label className="block mb-2 text-left text-lg font-medium">
@@ -174,7 +194,7 @@ const Home: React.FC = () => {
                     name="hastaReunion"
                     value={formData.hastaReunion}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border rounded border-gray-300  "
+                    className="w-full px-3 py-2 border rounded border-gray-300"
                   />
                 </label>
                 <label className="block mb-2 text-left text-lg font-medium">
@@ -184,7 +204,7 @@ const Home: React.FC = () => {
                     name="totalDias"
                     value={formData.totalDias}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border rounded border-gray-300  "
+                    className="w-full px-3 py-2 border rounded border-gray-300"
                   />
                 </label>
               </div>
@@ -192,7 +212,7 @@ const Home: React.FC = () => {
 
             {permissionType === 'hora' && (
               <div className="mb-4">
-                <h4 className="text-lg font-medium font-semibold mb-2">PERMISO POR HORA</h4>
+                <h4 className="text-lg font-medium mb-2">PERMISO POR HORA</h4>
                 <label className="block mb-2 text-left text-lg font-medium">
                   A partir de:
                   <input
@@ -200,7 +220,7 @@ const Home: React.FC = () => {
                     name="aPartirDe"
                     value={formData.aPartirDe}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border rounded border-gray-300  "
+                    className="w-full px-3 py-2 border rounded border-gray-300"
                   />
                 </label>
                 <label className="block mb-2 text-left text-lg font-medium">
@@ -210,7 +230,7 @@ const Home: React.FC = () => {
                     name="hastaLas"
                     value={formData.hastaLas}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border rounded border-gray-300  "
+                    className="w-full px-3 py-2 border rounded border-gray-300"
                   />
                 </label>
                 <label className="block mb-2 text-left text-lg font-medium">
@@ -220,7 +240,7 @@ const Home: React.FC = () => {
                     name="totalHoras"
                     value={formData.totalHoras}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border rounded border-gray-300  "
+                    className="w-full px-3 py-2 border rounded border-gray-300"
                   />
                 </label>
               </div>
@@ -232,24 +252,24 @@ const Home: React.FC = () => {
                 name="motivo"
                 value={formData.motivo}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border rounded border-gray-300  "
-              />
+                className="w-full px-3 py-2 border rounded border-gray-300"
+              ></textarea>
             </label>
             <label className="block mb-2 text-left text-lg font-medium">
-              Documento de Cita Médica u Otros:
+              Justificación:
               <input
                 type="file"
                 name="justificacion"
                 onChange={handleChange}
-                className="w-full px-3 py-2 border rounded border-gray-300  "
+                className="w-full px-3 py-2 border rounded border-gray-300"
               />
             </label>
           </div>
 
-          <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded">
-            Submit
+          <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
+            Enviar
           </button>
-          {successMessage && <p className="text-white mb-4 bg-green-400 p-2 mt-2">{successMessage}</p>}
+          {successMessage && <p className="mt-4 text-green-500">{successMessage}</p>}
         </form>
       )}
     </div>
